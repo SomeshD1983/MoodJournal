@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#fefefe" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Daily Mood & Reflection Journal</title>
+  <link rel="manifest" href="manifest.json">
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #fefefe;
+      --primary-color: #5c6bc0;
+      --accent-color: #ffca28;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --radius: 12px;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-color);
+      padding: 2rem;
+      max-width: 700px;
+      margin: auto;
+      color: #333;
+    }
+    h1, h2, h3 {
+      text-align: center;
+      color: var(--primary-color);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+    select, textarea, button, input[type="month"] {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #3f51b5;
+    }
+    #entry, #calendar-view, #summary-view {
+      margin-top: 2rem;
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .entry-block {
+      margin-top: 1rem;
+      background: #e3f2fd;
+      padding: 1rem;
+      border-radius: var(--radius);
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-top: 1rem;
+    }
+    .day-cell {
+      background: #f0f0f0;
+      padding: 12px;
+      border-radius: var(--radius);
+      text-align: center;
+      font-size: 0.9rem;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+    }
+    .mood-Happy { background: #fff9c4; }
+    .mood-Sad { background: #e1f5fe; }
+    .mood-Angry { background: #ffcdd2; }
+    .mood-Excited { background: #ffe082; }
+    .mood-Anxious { background: #cfd8dc; }
+    .mood-Grateful { background: #c8e6c9; }
+    ul { list-style: none; padding: 0; }
+    p { line-height: 1.6; }
+    #auth-section {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>📝 Daily Mood & Reflection</h1>
+  <div id="auth-section">
+    <button id="login-btn">Login with Google</button>
+    <button id="logout-btn" style="display:none">Logout</button>
+  </div>
+  <div id="entry">
+    <label for="mood">Your Mood Today:</label>
+    <select id="mood">
+      <option value="Happy">😊 Happy</option>
+      <option value="Sad">😔 Sad</option>
+      <option value="Angry">😠 Angry</option>
+      <option value="Excited">🤩 Excited</option>
+      <option value="Anxious">😰 Anxious</option>
+      <option value="Grateful">🙏 Grateful</option>
+    </select>
+    <label for="reflection">What’s on your mind today?</label>
+    <textarea id="reflection" rows="5" placeholder="Write freely..."></textarea>
+    <button onclick="saveEntry()">Save Entry</button>
+    <div id="entries"></div>
+  </div>
+  <div id="calendar-view">
+    <h3>📅 Mood Calendar</h3>
+    <label for="monthPicker">Select Month:</label>
+    <input type="month" id="monthPicker" onchange="renderCalendar()" />
+    <div class="calendar-grid" id="calendar"></div>
+    <button onclick="exportCalendar()">Download Mood Calendar (PNG)</button>
+  </div>
+  <div id="summary-view">
+    <h3>📊 Monthly Mood Summary</h3>
+    <div id="summary"></div>
+  </div>
+
+  <!-- Full script will be plugged in separately to keep this clean -->
+
+</body>
+</html>
